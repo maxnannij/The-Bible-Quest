@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elige tu Camino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container choose-path-container">
+        <h2>Elige tu camino</h2>
+        <p class="subtitle">Selecciona una categoría y nivel de dificultad</p>
+
+        <section class="category-selection">
+            <h3><i class="fas fa-book"></i> Categoría</h3>
+            <div class="grid-options category-grid">
+                <button class="option-card">
+                    <i class="fas fa-scroll"></i>
+                    <span>Historia</span>
+                    <small>Eventos y personajes bíblicos</small>
+                </button>
+                <button class="option-card">
+                    <i class="fas fa-cross"></i>
+                    <span>Teología</span>
+                    <small>Doctrina y enseñanzas</small>
+                </button>
+                <button class="option-card">
+                    <i class="fas fa-gavel"></i>
+                    <span>Apologética</span>
+                    <small>Defensa de la fe</small>
+                </button>
+                <button class="option-card">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Geografía</span>
+                    <small>Lugares bíblicos</small>
+                </button>
+                <button class="option-card">
+                    <i class="fas fa-book-reader"></i>
+                    <span>Versículos</span>
+                    <small>Pasajes de las Escrituras</small>
+                </button>
+            </div>
+        </section>
+
+        <section class="difficulty-selection">
+            <h3><i class="fas fa-signal"></i> Dificultad</h3>
+            <div class="grid-options difficulty-grid">
+                <button class="option-card difficulty-card easy">
+                    <span class="difficulty-dot"></span>
+                    <span>Fácil</span>
+                </button>
+                <button class="option-card difficulty-card medium">
+                    <span class="difficulty-dot"></span>
+                    <span>Medio</span>
+                </button>
+                <button class="option-card difficulty-card hard">
+                    <span class="difficulty-dot"></span>
+                    <span>Difícil</span>
+                </button>
+            </div>
+        </section>
+
+        <button class="start-challenge-btn">Comenzar el desafío</button>
+    </div>
+</body>
+</html>
