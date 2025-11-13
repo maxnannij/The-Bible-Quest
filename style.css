@@ -1,85 +1,237 @@
+/* --- Estilos Generales y Reseteo --- */
+*, *::before, *::after {
+    box-sizing: border-box; /* Asegura que padding y border se incluyan en el ancho/alto */
+    margin: 0;
+    padding: 0;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Open Sans', sans-serif; /* Fuente principal para el cuerpo */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: 100vh; /* Altura mínima de la ventana del navegador */
     margin: 0;
-    background-color: #f0f0f0;
-    color: #333;
+    /* Degradado de fondo con los colores de la imagen */
+    background: linear-gradient(135deg, #a8c0ff, #3f2b96); /* Degradado azul/púrpura */
+    color: #333; /* Color de texto predeterminado */
     text-align: center;
+    overflow-y: auto; /* Permite desplazamiento si el contenido es demasiado largo */
 }
 
+/* --- Contenedor Principal del Juego (Tarjeta) --- */
 .screen {
     width: 90%;
-    max-width: 600px;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    max-width: 500px; /* Ancho máximo para el contenedor */
+    padding: 30px; /* Relleno interior */
+    background-color: #ffffff; /* Fondo blanco puro */
+    border-radius: 20px; /* Esquinas muy redondeadas */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* Sombra suave pero pronunciada */
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out; /* Transición para mostrar/ocultar */
     opacity: 0;
-    transform: translateY(20px);
-    position: absolute; /* Para que solo uno sea visible a la vez */
+    transform: translateY(20px); /* Efecto de entrada desde abajo */
+    position: absolute; /* Para que las pantallas se superpongan y solo una sea visible */
 }
 
 .screen.active {
     opacity: 1;
-    transform: translateY(0);
-    position: relative; /* Para el que está activo */
+    transform: translateY(0); /* Posición final */
+    position: relative; /* La pantalla activa ocupa espacio en el flujo */
 }
 
 .screen.hidden {
-    display: none;
+    display: none; /* Oculta completamente las pantallas no activas */
 }
 
+/* --- Mensaje de Bienvenida --- */
 #welcome-screen h1 {
-    font-size: 3em;
-    color: #2c3e50; /* Un azul oscuro */
+    font-family: 'Playfair Display', serif; /* Fuente elegante para títulos */
+    font-size: 3.5em; /* Tamaño grande */
+    color: #3f2b96; /* Color oscuro del degradado de fondo */
     margin-bottom: 10px;
 }
 
 #welcome-screen p {
-    font-size: 1.2em;
-    color: #7f8c8d;
+    font-size: 1.3em;
+    color: #666;
 }
 
-/* Estilos para botones generales */
+/* --- Títulos Generales (H2, H3) --- */
+h2 {
+    font-family: 'Playfair Display', serif;
+    color: #3f2b96;
+    font-size: 2em;
+    margin-bottom: 25px;
+}
+
+h3 {
+    font-family: 'Playfair Display', serif; /* Usado para preguntas y subtítulos de dificultad */
+    color: #444;
+    font-size: 1.8em;
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* --- Contadores de Juego (Puntaje, Tiempo) --- */
+.game-info {
+    font-size: 1.1em;
+    font-weight: 600; /* Negrita */
+    margin: 5px 0;
+}
+
+#score-display {
+    color: #28a745; /* Verde para el puntaje, como en la imagen */
+}
+
+.timer-display {
+    color: #dc3545; /* Rojo para el temporizador, como en la imagen */
+    margin-bottom: 25px; /* Espacio extra debajo del tiempo */
+}
+
+/* --- Etiqueta de Categoría (debajo de la pregunta) --- */
+.category-tag {
+    font-size: 0.9em;
+    color: #888;
+    margin-top: -10px; /* Sube un poco para estar más cerca de la pregunta */
+    margin-bottom: 25px; /* Espacio debajo de la categoría */
+}
+
+/* --- Estilos para Botones Generales (Compartidos) --- */
 button {
-    background-color: #3498db; /* Azul */
+    background: linear-gradient(180deg, #6c93f0, #3467f0); /* Degradado azul de la imagen */
     color: white;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px; /* Esquinas redondeadas */
     cursor: pointer;
-    font-size: 1em;
-    margin: 5px;
-    transition: background-color 0.3s ease;
+    font-size: 1.1em;
+    margin: 8px; /* Espacio alrededor de los botones */
+    transition: all 0.2s ease-in-out; /* Transiciones suaves para hover */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Sombra de texto sutil */
 }
 
 button:hover:not(:disabled) {
-    background-color: #2980b9;
+    background: linear-gradient(180deg, #3467f0, #2a55ce); /* Degradado más oscuro al pasar el ratón */
+    transform: translateY(-2px); /* Efecto "levantar" */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra más grande al pasar el ratón */
 }
 
 button:disabled {
-    background-color: #cccccc;
+    background: #cccccc; /* Color gris para botones deshabilitados */
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+    text-shadow: none;
 }
 
-/* Estilos para modal de explicación */
+/* --- Botones de Categoría y Dificultad --- */
+#categories button, #difficulty button {
+    width: calc(50% - 16px); /* Dos columnas en pantallas más grandes */
+    max-width: 200px; /* Limita el tamaño de los botones */
+    margin: 8px;
+    display: inline-block; /* Permite que los botones estén en la misma línea */
+}
+/* Media query para una columna en móviles */
+@media (max-width: 480px) {
+    #categories button, #difficulty button {
+        width: calc(100% - 16px); /* Ocupa todo el ancho en pantallas pequeñas */
+    }
+}
+
+/* Estilo para el botón de categoría/dificultad seleccionado */
+button.selected {
+    background: linear-gradient(180deg, #2ecc71, #27ae60); /* Verde para seleccionado, como en la imagen */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    border: 2px solid #27ae60; /* Borde sutil */
+}
+
+/* --- Contenedor de Opciones de Pregunta --- */
+#options-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los botones pasen a la siguiente línea */
+    justify-content: center; /* Centra los botones horizontalmente */
+    gap: 10px; /* Espacio entre los botones de opción */
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.option-btn {
+    width: calc(50% - 20px); /* Dos botones por fila con espacio entre ellos */
+    max-width: 220px;
+    min-height: 60px; /* Altura mínima para que el texto quepa */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 1.05em;
+    font-weight: 600;
+}
+
+/* Media query para una columna en móviles si es necesario */
+@media (max-width: 400px) {
+    .option-btn {
+        width: calc(100% - 20px); /* Un botón por fila en pantallas muy pequeñas */
+    }
+}
+
+/* --- Estilos para los resultados de respuesta (verde/rojo) --- */
+.option-btn.correct {
+    background: linear-gradient(180deg, #28a745, #218838); /* Degradado verde */
+}
+
+.option-btn.incorrect {
+    background: linear-gradient(180deg, #dc3545, #c82333); /* Degradado rojo */
+}
+
+.option-btn.disabled-after-answer {
+    opacity: 0.7; /* Reduce la opacidad para indicar que están deshabilitados */
+    cursor: default; /* Cambia el cursor a default */
+    pointer-events: none; /* Deshabilita los clics */
+    transform: none; /* Elimina cualquier transformación */
+    box-shadow: none; /* Elimina la sombra */
+}
+
+/* --- Barra de Temporizador --- */
+#timer-bar-container {
+    width: 100%;
+    height: 12px; /* Un poco más alta */
+    background-color: #e0e0e0; /* Fondo gris claro */
+    border-radius: 6px;
+    margin-top: 20px;
+    overflow: hidden; /* Asegura que la barra interna no se desborde */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra interna sutil */
+}
+
+#timer-bar {
+    width: 100%; /* Empieza lleno */
+    height: 100%;
+    /* Degradado naranja/amarillo para la barra de tiempo */
+    background: linear-gradient(90deg, #f1c40f, #e67e22);
+    transition: width linear; /* La transición debe ser lineal para el efecto de vaciado */
+    border-radius: 6px;
+}
+
+/* Estilo para cuando la barra de tiempo cambia a rojo por JS */
+#timer-bar[style*="background-color: rgb(231, 76, 60)"] { /* Este selector intenta coincidir con el color establecido por JS */
+    background: linear-gradient(90deg, #e74c3c, #c0392b); /* Degradado rojo fuerte */
+}
+
+/* --- Modal de Explicación --- */
 .modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente oscuro */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1000; /* Asegura que el modal esté por encima de todo */
     opacity: 0;
-    visibility: hidden;
+    visibility: hidden; /* Oculta el modal de forma predeterminada */
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
@@ -89,58 +241,52 @@ button:disabled {
 }
 
 .modal-content {
-    background-color: #fff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    max-width: 500px;
+    background-color: #ffffff; /* Fondo blanco para el contenido del modal */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
     width: 90%;
-    text-align: left;
+    text-align: center; /* Centra el texto dentro del modal */
 }
 
 #result-text {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8em;
+    margin-bottom: 15px;
 }
 
 #explanation-text {
-    font-size: 1.1em;
-    line-height: 1.5;
+    font-size: 1.05em;
+    line-height: 1.6; /* Espaciado entre líneas */
     color: #555;
-    margin-bottom: 20px;
-}
-#timer-bar-container {
-    width: 100%;
-    height: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    overflow: hidden; /* Asegura que la barra interna no se desborde */
+    margin-bottom: 25px;
 }
 
-#timer-bar {
-    width: 100%; /* Empieza lleno */
-    height: 100%;
-    background-color: #f39c12; /* Naranja/Amarillo */
-    transition: width linear; /* La transición será lineal para el efecto de vaciado */
+/* --- Pantalla de Resultados Finales --- */
+#results-screen input[type="text"] {
+    width: calc(100% - 40px); /* Ajusta el ancho con padding */
+    padding: 12px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    box-sizing: border-box; /* Incluye padding en el ancho */
 }
 
-/* Estilos para el resultado de la respuesta */
-.correct {
-    background-color: #2ecc71 !important; /* Verde */
+/* --- Pantalla de Historial de Puntuaciones --- */
+#high-scores-list {
+    list-style: none; /* Quita los puntos de la lista */
+    padding: 0;
+    margin-top: 20px;
 }
 
-.incorrect {
-    background-color: #e74c3c !important; /* Rojo */
-}
-
-.selected {
-    border: 2px solid #3498db; /* Borde para la categoría/dificultad seleccionada */
-    background-color: #2980b9; /* Un poco más oscuro */
-}
-
-/* Para los botones de opción después de responder */
-.option-btn.disabled-after-answer {
-    pointer-events: none; /* Deshabilita clics sin cambiar el cursor */
-    opacity: 0.7; /* Suaviza visualmente */
+#high-scores-list li {
+    background-color: #f8f9fa; /* Fondo ligeramente gris para cada elemento */
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 1.05em;
+    color: #444;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra suave */
 }
