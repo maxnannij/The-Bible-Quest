@@ -5,24 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bienaventurado - El Quiz Bíblico</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts para una fuente elegante y legible -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <!-- Pantalla de Bienvenida -->
     <div id="welcome-screen" class="screen active">
         <h1>Bienaventurado</h1>
         <p>Prepárate para explorar las riquezas de la Palabra.</p>
     </div>
 
+    <!-- Pantalla de Configuración (Selección de Categoría y Dificultad) -->
     <div id="setup-screen" class="screen hidden">
         <h2>Selecciona tu Camino y Desafío</h2>
         <div id="categories">
-            <!-- Categorías se cargarán aquí -->
             <button class="category-btn" data-category="Historia Bíblica">Historia Bíblica</button>
             <button class="category-btn" data-category="Teología">Teología</button>
             <button class="category-btn" data-category="Apologética">Apologética</button>
             <button class="category-btn" data-category="Geografía Bíblica">Geografía Bíblica</button>
             <button class="category-btn" data-category="Citas Bíblicas">Citas Bíblicas</button>
         </div>
+        <h3>Dificultad</h3>
         <div id="difficulty">
             <button class="difficulty-btn" data-difficulty="Fácil">Fácil</button>
             <button class="difficulty-btn" data-difficulty="Medio">Medio</button>
@@ -31,21 +35,24 @@
         <button id="startGameBtn" disabled>Comenzar Juego</button>
     </div>
 
+    <!-- Pantalla del Juego (Pregunta, Opciones, Temporizador, Puntaje) -->
     <div id="game-screen" class="screen hidden">
-        <div id="timer-bar-container">
-            <div id="timer-bar"></div>
-        </div>
-        <p id="question-category"></p>
+        <p class="game-info">Puntaje: <span id="score-display">0</span></p>
+        <p class="game-info timer-display">Tiempo restante: <span id="timer-countdown">30s</span></p>
         <h3 id="question-text"></h3>
+        <p id="question-category" class="category-tag"></p>
         <div id="options-container">
             <button class="option-btn"></button>
             <button class="option-btn"></button>
             <button class="option-btn"></button>
             <button class="option-btn"></button>
         </div>
-        <p>Puntos: <span id="score-display">0</span></p>
+        <div id="timer-bar-container">
+            <div id="timer-bar"></div>
+        </div>
     </div>
 
+    <!-- Modal de Explicación (Después de cada respuesta) -->
     <div id="explanation-modal" class="modal hidden">
         <div class="modal-content">
             <h4 id="result-text"></h4>
@@ -54,6 +61,7 @@
         </div>
     </div>
 
+    <!-- Pantalla de Resultados Finales -->
     <div id="results-screen" class="screen hidden">
         <h2>Juego Terminado</h2>
         <p>Tu Puntuación Final: <span id="final-score">0</span></p>
@@ -63,14 +71,16 @@
         <button id="playAgainBtn">Jugar de Nuevo</button>
     </div>
 
+    <!-- Pantalla de Historial de Puntuaciones -->
     <div id="scores-screen" class="screen hidden">
         <h2>Historial de Puntuaciones</h2>
         <ul id="high-scores-list">
-            <!-- Puntuaciones se cargarán aquí -->
+            <!-- Las puntuaciones se cargarán aquí dinámicamente -->
         </ul>
         <button id="backToMenuBtn">Volver al Menú</button>
     </div>
 
-<script type="module" src="main.js"></script>
+    <!-- Script principal del juego (cargar los módulos de preguntas y la lógica del juego) -->
+    <script type="module" src="main.js"></script>
 </body>
 </html>
