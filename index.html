@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienaventurado - El Quiz Bíblico</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="welcome-screen" class="screen active">
+        <h1>Bienaventurado</h1>
+        <p>Prepárate para explorar las riquezas de la Palabra.</p>
+    </div>
+
+    <div id="setup-screen" class="screen hidden">
+        <h2>Selecciona tu Camino y Desafío</h2>
+        <div id="categories">
+            <!-- Categorías se cargarán aquí -->
+            <button class="category-btn" data-category="Historia Bíblica">Historia Bíblica</button>
+            <button class="category-btn" data-category="Teología">Teología</button>
+            <button class="category-btn" data-category="Apologética">Apologética</button>
+            <button class="category-btn" data-category="Geografía Bíblica">Geografía Bíblica</button>
+            <button class="category-btn" data-category="Citas Bíblicas">Citas Bíblicas</button>
+        </div>
+        <div id="difficulty">
+            <button class="difficulty-btn" data-difficulty="Fácil">Fácil</button>
+            <button class="difficulty-btn" data-difficulty="Medio">Medio</button>
+            <button class="difficulty-btn" data-difficulty="Difícil">Difícil</button>
+        </div>
+        <button id="startGameBtn" disabled>Comenzar Juego</button>
+    </div>
+
+    <div id="game-screen" class="screen hidden">
+        <p id="question-category"></p>
+        <h3 id="question-text"></h3>
+        <div id="options-container">
+            <button class="option-btn"></button>
+            <button class="option-btn"></button>
+            <button class="option-btn"></button>
+            <button class="option-btn"></button>
+        </div>
+        <p>Puntos: <span id="score-display">0</span></p>
+    </div>
+
+    <div id="explanation-modal" class="modal hidden">
+        <div class="modal-content">
+            <h4 id="result-text"></h4>
+            <p id="explanation-text"></p>
+            <button id="nextQuestionBtn">Siguiente Pregunta</button>
+        </div>
+    </div>
+
+    <div id="results-screen" class="screen hidden">
+        <h2>Juego Terminado</h2>
+        <p>Tu Puntuación Final: <span id="final-score">0</span></p>
+        <input type="text" id="playerNameInput" placeholder="Introduce tu nombre">
+        <button id="saveScoreBtn">Guardar Puntuación</button>
+        <button id="viewScoresBtn">Ver Historial</button>
+        <button id="playAgainBtn">Jugar de Nuevo</button>
+    </div>
+
+    <div id="scores-screen" class="screen hidden">
+        <h2>Historial de Puntuaciones</h2>
+        <ul id="high-scores-list">
+            <!-- Puntuaciones se cargarán aquí -->
+        </ul>
+        <button id="backToMenuBtn">Volver al Menú</button>
+    </div>
+
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
