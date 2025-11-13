@@ -1,3 +1,5 @@
+// gamelogic.js
+
 // Referencias a elementos del DOM
 const welcomeScreen = document.getElementById('welcome-screen');
 const setupScreen = document.getElementById('setup-screen');
@@ -25,11 +27,22 @@ const finalScoreDisplay = document.getElementById('final-score');
 const playerNameInput = document.getElementById('playerNameInput');
 const highScoresList = document.getElementById('high-scores-list');
 
+// Nuevos elementos para el temporizador y la barra
+const timerBar = document.getElementById('timer-bar');
+const timerCountdownDisplay = document.getElementById('timer-countdown');
+
 let selectedCategory = null;
 let selectedDifficulty = null;
 let currentQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
+
+let timeRemaining = 30; // 30 segundos por pregunta
+let timerInterval;
+const MAX_TIME = 30; // Tiempo máximo para la barra
+
+// Variable para almacenar todas las preguntas (será llenada desde main.js)
+export let allQuestions = []; // Exporta para que main.js pueda pasar las preguntas combinadas
 
 // Función para cambiar de pantalla
 function showScreen(screenToShow) {
@@ -62,9 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Event Listeners para selección de categoría y dificultad
 categoriesContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('category-btn')) {
-        // Eliminar 'selected' de todos los botones de categoría
         document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('selected'));
-        // Añadir 'selected' al botón clicado
         e.target.classList.add('selected');
         selectedCategory = e.target.dataset.category;
         checkCanStartGame();
@@ -73,9 +84,7 @@ categoriesContainer.addEventListener('click', (e) => {
 
 difficultyContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('difficulty-btn')) {
-        // Eliminar 'selected' de todos los botones de dificultad
         document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
-        // Añadir 'selected' al botón clicado
         e.target.classList.add('selected');
         selectedDifficulty = e.target.dataset.difficulty;
         checkCanStartGame();
@@ -85,8 +94,10 @@ difficultyContainer.addEventListener('click', (e) => {
 function checkCanStartGame() {
     if (selectedCategory && selectedDifficulty) {
         startGameBtn.disabled = false;
+        startGameBtn.style.backgroundColor = ''; // Restablecer color por defecto del CSS
     } else {
         startGameBtn.disabled = true;
+        startGameBtn.style.backgroundColor = '#cccccc'; // Color deshabilitado
     }
 }
 
@@ -140,144 +151,16 @@ saveScoreBtn.addEventListener('click', () => {
 });
 
 
-// --- Funciones del juego (se completarán más adelante) ---
-
-function startQuiz() {
-    // 1. Filtrar preguntas por categoría y dificultad
-    currentQuestions = questions.filter(q =>
-        q.categoria === selectedCategory && q.dificultad === selectedDifficulty
-    );
-
-    // 2. Mezclar las preguntas (Fisher-Yates shuffle)
-    for (let i = currentQuestions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [currentQuestions[i], currentQuestions[j]] = [currentQuestions[j], currentQuestions[i]];
-    }
-
-    score = 0;
-    currentQuestionIndex = 0;
-    scoreDisplay.textContent = score;
-    showScreen(gameScreen);
-    displayQuestion();
-}
-
-function displayQuestion() {
-    if (currentQuestionIndex >= currentQuestions.length) {
-        endQuiz();
-        return;
-    }
-
-    const question = currentQuestions[currentQuestionIndex];
-    questionCategory.textContent = `Categoría: ${question.categoria} - Dificultad: ${question.dificultad}`;
-    questionText.textContent = question.pregunta;
-
-    // Mezclar las opciones para cada pregunta
-    const shuffledOptions = [...question.opciones].sort(() => Math.random() - 0.5);
-
-    optionsContainer.innerHTML = ''; // Limpiar opciones anteriores
-    shuffledOptions.forEach(option => {
-        const button = document.createElement('button');
-        button.classList.add('option-btn');
-        button.textContent = option;
-        button.addEventListener('click', () => checkAnswer(option, question.respuestaCorrecta, question.explicacion));
-        optionsContainer.appendChild(button);
-    });
-
-    // Restaurar estilos de botones si es necesario
-    document.querySelectorAll('.option-btn').forEach(btn => {
-        btn.style.backgroundColor = ''; // Restaura el color original
-        btn.disabled = false;
-    });
-}
-
-
-function checkAnswer(selectedOption, correctAnswer, explanation) {
-    const allOptionButtons = document.querySelectorAll('.option-btn');
-    allOptionButtons.forEach(btn => {
-        btn.disabled = true; // Deshabilitar botones para evitar múltiples clics
-        if (btn.textContent === correctAnswer) {
-            btn.style.backgroundColor = '#2ecc71'; // Verde para la correcta
-        } else if (btn.textContent === selectedOption) {
-            btn.style.backgroundColor = '#e74c3c'; // Rojo para la incorrecta seleccionada
-        }
-    });
-
-    if (selectedOption === correctAnswer) {
-        score++;
-        scoreDisplay.textContent = score;
-        resultText.textContent = '¡Correcto!';
-        resultText.style.color = '#2ecc71';
-    } else {
-        resultText.textContent = 'Incorrecto.';
-        resultText.style.color = '#e74c3c';
-    }
-    explanationText.textContent = explanation;
-    explanationModal.classList.add('active'); // Mostrar el modal de explicación
-}
-
-
-function endQuiz() {
-    finalScoreDisplay.textContent = score;
-    saveScoreBtn.disabled = false; // Habilitar el botón de guardar puntuación
-    showScreen(resultsScreen);
-}
-
-// --- Funciones para High Scores (Usando localStorage) ---
-
-function getHighScores() {
-    const scores = JSON.parse(localStorage.getItem('bibleQuizHighScores')) || [];
-    return scores.sort((a, b) => b.puntuacion - a.puntuacion); // Ordenar de mayor a menor
-}
-
-function saveHighScore(name, score) {
-    const scores = getHighScores();
-    scores.push({ nombre: name, puntuacion: score });
-    localStorage.setItem('bibleQuizHighScores', JSON.stringify(scores));
-    displayHighScores(); // Actualizar la lista después de guardar
-}
-
-function displayHighScores() {
-    const scores = getHighScores();
-    highScoresList.innerHTML = ''; // Limpiar lista
-    if (scores.length === 0) {
-        highScoresList.innerHTML = '<li>Aún no hay puntuaciones. ¡Sé el primero!</li>';
-    } else {
-        scores.forEach((s, index) => {
-            const li = document.createElement('li');
-            li.textContent = `${index + 1}. ${s.nombre} - ${s.puntuacion} puntos`;
-            highScoresList.appendChild(li);
-        });
-    }
-}
-// ... (Referencias a elementos del DOM existentes) ...
-
-const timerBar = document.getElementById('timer-bar');
-
-// ... (variables existentes) ...
-let timeRemaining = 30; // 30 segundos por pregunta
-let timerInterval;
-const MAX_TIME = 30; // Tiempo máximo para la barra
-
-// ... (funciones showScreen, DOMContentLoaded, event listeners existentes) ...
-
-function checkCanStartGame() {
-    if (selectedCategory && selectedDifficulty) {
-        startGameBtn.disabled = false;
-        startGameBtn.style.backgroundColor = '#3498db'; // Reestablece el color
-    } else {
-        startGameBtn.disabled = true;
-        startGameBtn.style.backgroundColor = '#cccccc'; // Color deshabilitado
-    }
-}
-
-// ... (resto de event listeners existentes) ...
-
-
 // --- Funciones del juego ---
 
+// Función para inicializar las preguntas (llamada desde main.js)
+export function setQuestions(questionsArray) {
+    allQuestions = questionsArray;
+}
+
 function startQuiz() {
     // 1. Filtrar preguntas por categoría y dificultad
-    currentQuestions = questions.filter(q =>
+    currentQuestions = allQuestions.filter(q => // Usar allQuestions aquí
         q.categoria === selectedCategory && q.dificultad === selectedDifficulty
     );
 
@@ -331,19 +214,21 @@ function displayQuestion() {
 function startTimer() {
     timeRemaining = MAX_TIME;
     timerBar.style.width = '100%';
-    timerBar.style.backgroundColor = '#f39c12'; // Color inicial
+    timerBar.style.backgroundColor = '#f1c40f'; // Color inicial
+    timerCountdownDisplay.textContent = `${timeRemaining}s`; // Actualizar texto inicial
 
     timerInterval = setInterval(() => {
         timeRemaining--;
         // Actualizar la barra de progreso
         const percentage = (timeRemaining / MAX_TIME) * 100;
         timerBar.style.width = `${percentage}%`;
+        timerCountdownDisplay.textContent = `${timeRemaining}s`; // Actualizar texto
 
         // Cambiar color de la barra cuando queda poco tiempo
         if (timeRemaining <= 10) {
             timerBar.style.backgroundColor = '#e74c3c'; // Rojo
         } else {
-            timerBar.style.backgroundColor = '#f39c12'; // Naranja/Amarillo
+            timerBar.style.backgroundColor = '#f1c40f'; // Naranja/Amarillo
         }
 
         if (timeRemaining <= 0) {
@@ -357,20 +242,21 @@ function resetTimer() {
     clearInterval(timerInterval);
     timeRemaining = MAX_TIME;
     timerBar.style.width = '100%';
-    timerBar.style.backgroundColor = '#f39c12';
+    timerBar.style.backgroundColor = '#f1c40f';
+    timerCountdownDisplay.textContent = `${timeRemaining}s`; // Reiniciar texto
 }
 
 function handleTimeUp() {
     // Cuando el tiempo se agota, considera la respuesta como incorrecta
     // y muestra la explicación de la pregunta actual
     const question = currentQuestions[currentQuestionIndex];
-    
+
     // Deshabilitar todos los botones para evitar más clics
     document.querySelectorAll('.option-btn').forEach(btn => {
         btn.disabled = true;
         btn.classList.add('disabled-after-answer'); // Añadir clase para estilo deshabilitado
         if (btn.textContent === question.respuestaCorrecta) {
-             btn.style.backgroundColor = '#2ecc71'; // Muestra la correcta en verde
+             btn.classList.add('correct'); // Muestra la correcta en verde
         }
     });
 
@@ -378,6 +264,7 @@ function handleTimeUp() {
     resultText.style.color = '#e74c3c'; // Rojo
     explanationText.textContent = question.explicacion;
     explanationModal.classList.add('active'); // Mostrar el modal
+    timerBar.style.backgroundColor = '#e74c3c'; // Asegurarse de que la barra se ponga roja
 }
 
 
@@ -416,44 +303,14 @@ function endQuiz() {
     saveScoreBtn.disabled = false;
     showScreen(resultsScreen);
 }
-const timerCountdownDisplay = document.getElementById('timer-countdown'); // Nuevo elemento
 
-// ... (Tus variables existentes) ...
+// --- Funciones para High Scores (Usando localStorage) ---
 
-function startTimer() {
-    timeRemaining = MAX_TIME;
-    timerBar.style.width = '100%';
-    timerBar.style.backgroundColor = '#f1c40f'; // Color inicial del degradado
-    timerCountdownDisplay.textContent = `${timeRemaining}s`; // Actualizar texto inicial
-
-    timerInterval = setInterval(() => {
-        timeRemaining--;
-        // Actualizar la barra de progreso
-        const percentage = (timeRemaining / MAX_TIME) * 100;
-        timerBar.style.width = `${percentage}%`;
-        timerCountdownDisplay.textContent = `${timeRemaining}s`; // Actualizar texto
-
-        // Cambiar color de la barra cuando queda poco tiempo
-        if (timeRemaining <= 10) {
-            timerBar.style.backgroundColor = '#e74c3c'; // Rojo
-        } else {
-            timerBar.style.backgroundColor = '#f1c40f'; // Naranja/Amarillo
-        }
-
-        if (timeRemaining <= 0) {
-            clearInterval(timerInterval);
-            handleTimeUp();
-        }
-    }, 1000); // Actualiza cada segundo
+function getHighScores() {
+    const scores = JSON.parse(localStorage.getItem('bibleQuizHighScores')) || [];
+    return scores.sort((a, b) => b.puntuacion - a.puntuacion); // Ordenar de mayor a menor
 }
 
-function resetTimer() {
-    clearInterval(timerInterval);
-    timeRemaining = MAX_TIME;
-    timerBar.style.width = '100%';
-    timerBar.style.backgroundColor = '#f1c40f';
-    timerCountdownDisplay.textContent = `${timeRemaining}s`; // Reiniciar texto
-}
-
-// ... (Resto de tu JS) ...
-// ... (funciones getHighScores, saveHighScore, displayHighScores existentes) ...
+function saveHighScore(name, score) {
+    const scores = getHighScores();
+    scores.push({ nombre: name, puntuacion
