@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafío Bíblico</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container quiz-container">
+        <div class="quiz-header">
+            <div class="question-info">
+                <span id="question-number">Pregunta 1 de 2</span>
+                <div class="score-display">Puntuación: <span id="current-score">0</span></div>
+            </div>
+            <div class="timer-display">
+                <i class="fas fa-clock"></i> <span id="timer-seconds">7s</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress" id="quiz-progress"></div>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <p class="question-text" id="question-text">¿Quién construyó el arca para salvarse del diluvio?</p>
+
+            <div class="options-grid" id="options-grid">
+                <!-- Las opciones se cargarán aquí con JavaScript -->
+                <button class="option-button" data-option="A">
+                    <span class="option-letter">A</span> Noé
+                </button>
+                <button class="option-button" data-option="B">
+                    <span class="option-letter">B</span> Abraham
+                </button>
+                <button class="option-button" data-option="C">
+                    <span class="option-letter">C</span> Moisés
+                </button>
+                <button class="option-button" data-option="D">
+                    <span class="option-letter">D</span> David
+                </button>
+            </div>
+
+            <!-- Sección "Aprende más" (inicialmente oculta) -->
+            <div class="learn-more" id="learn-more-section">
+                <h4><i class="fas fa-book-open"></i> Aprende más</h4>
+                <p id="learn-more-text">Noé fue elegido por Dios por ser justo en su generación. Construyó un arca siguiendo las instrucciones divinas y salvó a su familia y a los animales del gran diluvio que cubrió la tierra.</p>
+                <p class="bible-verse" id="bible-verse"><i class="fas fa-bible"></i> Génesis 6:13-14</p>
+            </div>
+
+            <button class="next-question-btn" id="next-question-btn">Siguiente pregunta</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
