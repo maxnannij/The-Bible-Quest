@@ -1,30 +1,25 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- Lógica Común o de Inicialización ---
-    // Puedes colocar funciones o variables globales que se usen en varias páginas aquí.
-
     // --- Lógica para la Página de Bienvenida (index.html) ---
     const loginGithubBtn = document.querySelector('.github-btn');
     const registerGithubBtn = document.querySelector('.register-btn');
     const playGuestBtn = document.querySelector('.guest-btn');
 
-    if (loginGithubBtn && registerGithubBtn && playGuestBtn) { // Solo si estos botones existen en la página actual
+    if (loginGithubBtn && registerGithubBtn && playGuestBtn) {
         loginGithubBtn.addEventListener('click', () => {
-            // Aquí iría la lógica de inicio de sesión de GitHub OAuth
             localStorage.setItem('githubUsername', 'UsuarioGitHubSimulado');
             alert('Simulación de inicio de sesión con GitHub. ¡Bienvenido!');
             window.location.href = 'choose-path.html';
         });
 
         registerGithubBtn.addEventListener('click', () => {
-            // Aquí iría la lógica de registro de GitHub OAuth
             localStorage.setItem('githubUsername', 'NuevoUsuarioGitHub');
             alert('Simulación de registro con GitHub. ¡Tu cuenta ha sido creada!');
             window.location.href = 'choose-path.html';
         });
 
         playGuestBtn.addEventListener('click', () => {
-            localStorage.removeItem('githubUsername'); // Asegurarse de que no hay usuario de GitHub
+            localStorage.removeItem('githubUsername');
             alert('Jugando como invitado. Los récords no se guardarán permanentemente.');
             window.location.href = 'choose-path.html';
         });
@@ -33,17 +28,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica para la Página de "Elige tu camino" (choose-path.html) ---
     const categoryCards = document.querySelectorAll('.category-selection .option-card');
     const difficultyCards = document.querySelectorAll('.difficulty-selection .option-card');
-    const startChallengeBtn = document.querySelector('.start-challenge-btn'); // Usamos querySelector con la clase
+    const startChallengeBtn = document.getElementById('start-challenge-btn'); // Ahora usando el ID
 
-    if (categoryCards.length > 0 && difficultyCards.length > 0 && startChallengeBtn) { // Solo si estamos en choose-path.html
-        let selectedCategory = null;
-        let selectedDifficulty = null;
+    if (categoryCards.length > 0 && difficultyCards.length > 0 && startChallengeBtn) {
+        let selectedCategory = localStorage.getItem('quizCategory') || null;
+        let selectedDifficulty = localStorage.getItem('quizDifficulty') || null;
+
+        // Función para aplicar la clase 'selected'
+        const applySelection = (cards, value, dataAttribute) => {
+            cards.forEach(card => {
+                if (card.dataset[dataAttribute] === value) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        };
+
+        // Restaurar selección al cargar la página
+        applySelection(categoryCards, selectedCategory, 'category');
+        applySelection(difficultyCards, selectedDifficulty, 'difficulty');
+
 
         categoryCards.forEach(card => {
             card.addEventListener('click', () => {
-                categoryCards.forEach(c => c.classList.remove('selected'));
-                card.classList.add('selected');
-                selectedCategory = card.querySelector('span').textContent;
+                applySelection(categoryCards, card.dataset.category, 'category');
+                selectedCategory = card.dataset.category;
+                localStorage.setItem('quizCategory', selectedCategory); // Guardar en localStorage
                 console.log('Categoría seleccionada:', selectedCategory);
                 checkCanStartQuiz();
             });
@@ -51,9 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         difficultyCards.forEach(card => {
             card.addEventListener('click', () => {
-                difficultyCards.forEach(d => d.classList.remove('selected'));
-                card.classList.add('selected');
-                selectedDifficulty = card.querySelector('span').textContent;
+                applySelection(difficultyCards, card.dataset.difficulty, 'difficulty');
+                selectedDifficulty = card.dataset.difficulty;
+                localStorage.setItem('quizDifficulty', selectedDifficulty); // Guardar en localStorage
                 console.log('Dificultad seleccionada:', selectedDifficulty);
                 checkCanStartQuiz();
             });
@@ -62,8 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startChallengeBtn.addEventListener('click', () => {
             if (selectedCategory && selectedDifficulty) {
                 console.log(`Iniciando desafío: Categoría - ${selectedCategory}, Dificultad - ${selectedDifficulty}`);
-                localStorage.setItem('quizCategory', selectedCategory);
-                localStorage.setItem('quizDifficulty', selectedDifficulty);
+                // Las selecciones ya están guardadas en localStorage
                 window.location.href = 'quiz.html';
             } else {
                 alert('Por favor, selecciona una categoría y una dificultad.');
@@ -76,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 startChallengeBtn.style.opacity = '1';
             } else {
                 startChallengeBtn.disabled = true;
-                startChallengeBtn.style.opacity = '0.7';
+                startChallengeBtn.style.opacity = '0.5'; // Coherente con CSS
             }
         }
         checkCanStartQuiz(); // Establecer estado inicial del botón
@@ -85,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Lógica para la Página de Preguntas y Respuestas (quiz.html) ---
     const questionText = document.getElementById('question-text');
 
-    if (questionText) { // Solo si estamos en quiz.html
+    if (questionText) {
         const optionsGrid = document.getElementById('options-grid');
         const questionNumberSpan = document.getElementById('question-number');
         const currentScoreSpan = document.getElementById('current-score');
@@ -100,81 +110,86 @@ document.addEventListener('DOMContentLoaded', () => {
         let score = 0;
         let timer;
         let timeLeft = 20; // Tiempo para cada pregunta
-        const questions = [
-            {
-                question: "¿Quién construyó el arca para salvarse del diluvio?",
-                options: ["Noé", "Abraham", "Moisés", "David"],
-                answer: "Noé",
-                learnMore: "Noé fue elegido por Dios por ser justo en su generación. Construyó un arca siguiendo las instrucciones divinas y salvó a su familia y a los animales del gran diluvio que cubrió la tierra.",
-                verse: "Génesis 6:13-14"
-            },
-            {
-                question: "¿Cuántos días y noches llovió durante el diluvio?",
-                options: ["7 días y 7 noches", "20 días y 20 noches", "40 días y 40 noches", "150 días y 150 noches"],
-                answer: "40 días y 40 noches",
-                learnMore: "El diluvio duró cuarenta días y cuarenta noches, cubriendo toda la tierra y destruyendo toda vida fuera del arca.",
-                verse: "Génesis 7:12"
-            },
-            {
-                question: "¿Quién fue el primer hombre creado por Dios?",
-                options: ["Abraham", "Adán", "Noé", "Caín"],
-                answer: "Adán",
-                learnMore: "Adán fue el primer ser humano creado por Dios a su imagen y semejanza, del polvo de la tierra, en el Jardín del Edén.",
-                verse: "Génesis 2:7"
-            },
-            // Añade más preguntas aquí
-        ];
+        let currentQuestions = []; // Array para almacenar las preguntas cargadas
 
-        loadQuestion();
-        startTimer(); // Iniciar el temporizador para la primera pregunta
+        // Cargar las preguntas según la categoría y dificultad seleccionadas
+        const category = localStorage.getItem('quizCategory');
+        const difficulty = localStorage.getItem('quizDifficulty');
+
+        async function loadQuizQuestions() {
+            if (!category || !difficulty) {
+                alert('No se ha seleccionado categoría o dificultad. Redirigiendo.');
+                window.location.href = 'choose-path.html';
+                return;
+            }
+            const filename = `questions/${category.toLowerCase()}_${difficulty.toLowerCase()}.json`;
+            try {
+                const response = await fetch(filename);
+                if (!response.ok) {
+                    throw new Error(`No se pudo cargar el archivo de preguntas: ${response.statusText}`);
+                }
+                currentQuestions = await response.json();
+                if (currentQuestions.length > 0) {
+                    loadQuestion();
+                    startTimer();
+                } else {
+                    alert('No hay preguntas disponibles para esta selección. Redirigiendo.');
+                    window.location.href = 'choose-path.html';
+                }
+            } catch (error) {
+                console.error('Error al cargar las preguntas:', error);
+                alert('Hubo un error al cargar las preguntas. Redirigiendo.');
+                window.location.href = 'choose-path.html';
+            }
+        }
+
+        loadQuizQuestions(); // Iniciar la carga de preguntas al cargar quiz.html
+
 
         function loadQuestion() {
-            if (currentQuestionIndex < questions.length) {
-                const q = questions[currentQuestionIndex];
-                questionNumberSpan.textContent = `Pregunta ${currentQuestionIndex + 1} de ${questions.length}`;
+            if (currentQuestionIndex < currentQuestions.length) {
+                const q = currentQuestions[currentQuestionIndex];
+                questionNumberSpan.textContent = `Pregunta ${currentQuestionIndex + 1} de ${currentQuestions.length}`;
                 currentScoreSpan.textContent = score;
                 questionText.textContent = q.question;
-                optionsGrid.innerHTML = ''; // Limpiar opciones anteriores
-                learnMoreSection.classList.remove('show'); // Ocultar sección "Aprende más"
-                nextQuestionBtn.classList.remove('show'); // Ocultar botón "Siguiente"
+                optionsGrid.innerHTML = '';
+                learnMoreSection.classList.remove('show');
+                nextQuestionBtn.classList.remove('show');
 
                 q.options.forEach((option, index) => {
                     const button = document.createElement('button');
                     button.classList.add('option-button');
-                    button.dataset.option = String.fromCharCode(65 + index); // A, B, C, D
+                    button.dataset.option = String.fromCharCode(65 + index);
                     button.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + index)}</span> ${option}`;
                     button.addEventListener('click', () => selectOption(button, option, q.answer, q.learnMore, q.verse));
                     optionsGrid.appendChild(button);
                 });
-                resetTimer(); // Reiniciar el temporizador para la nueva pregunta
+                resetTimer();
             } else {
                 endQuiz();
             }
         }
 
         function selectOption(selectedButton, selectedAnswer, correctAnswer, learnMoreInfo, bibleVerseInfo) {
-            clearInterval(timer); // Detener el temporizador
-            disableOptions(); // Deshabilitar todas las opciones
+            clearInterval(timer);
+            disableOptions();
 
-            if (selectedButton) { // Si se hizo clic en una opción (no por tiempo agotado)
+            if (selectedButton) {
                 if (selectedAnswer === correctAnswer) {
                     selectedButton.classList.add('correct');
-                    score += 10; // Sumar puntos por respuesta correcta
+                    score += 10;
                     currentScoreSpan.textContent = score;
                 } else {
                     selectedButton.classList.add('incorrect');
                 }
             }
 
-            // Marcar la respuesta correcta (si el usuario falló o el tiempo se agotó)
             Array.from(optionsGrid.children).forEach(button => {
                 if (button.textContent.includes(correctAnswer)) {
                     button.classList.add('correct');
                 }
             });
 
-
-            // Mostrar sección "Aprende más"
             learnMoreText.textContent = learnMoreInfo;
             bibleVerse.innerHTML = `<i class="fas fa-bible"></i> ${bibleVerseInfo}`;
             learnMoreSection.classList.add('show');
@@ -188,11 +203,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function startTimer() {
-            timeLeft = 20; // Reiniciar tiempo
+            timeLeft = 20;
             timerSecondsSpan.textContent = `${timeLeft}s`;
             quizProgressBar.style.width = '100%';
-            quizProgressBar.style.backgroundColor = 'white'; // Asegurar color inicial
-            timerSecondsSpan.style.color = 'white'; // Asegurar color de texto del timer
+            quizProgressBar.style.backgroundColor = 'white';
+            timerSecondsSpan.style.color = 'white';
 
             timer = setInterval(() => {
                 timeLeft--;
@@ -208,18 +223,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (timeLeft <= 0) {
                     clearInterval(timer);
-                    const q = questions[currentQuestionIndex];
-                    // Pasar null para selectedButton y selectedAnswer ya que el tiempo se agotó
+                    const q = currentQuestions[currentQuestionIndex];
                     selectOption(null, null, q.answer, q.learnMore, q.verse);
-                    // Puedes decidir si mostrar una alerta o simplemente revelar la respuesta
-                    // alert('¡Tiempo agotado!');
                 }
             }, 1000);
         }
 
         function resetTimer() {
-            clearInterval(timer); // Asegúrate de limpiar cualquier temporizador previo
-            startTimer(); // Iniciar un nuevo temporizador
+            clearInterval(timer);
+            startTimer();
         }
 
         nextQuestionBtn.addEventListener('click', () => {
@@ -231,10 +243,9 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(timer);
             alert(`¡Quiz terminado! Tu puntuación final es: ${score}`);
             window.location.href = 'index.html';
-            saveScoreToGitHub(score); // Función placeholder
+            saveScoreToGitHub(score);
         }
 
-        // --- Lógica simulada de GitHub ---
         function saveScoreToGitHub(finalScore) {
             const username = localStorage.getItem('githubUsername') || 'Invitado';
             console.log(`Simulando guardar score de ${username}: ${finalScore} en GitHub.`);
