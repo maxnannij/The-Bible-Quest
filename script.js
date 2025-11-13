@@ -249,3 +249,172 @@ function displayHighScores() {
         });
     }
 }
+// ... (Referencias a elementos del DOM existentes) ...
+
+const timerBar = document.getElementById('timer-bar');
+
+// ... (variables existentes) ...
+let timeRemaining = 30; // 30 segundos por pregunta
+let timerInterval;
+const MAX_TIME = 30; // Tiempo máximo para la barra
+
+// ... (funciones showScreen, DOMContentLoaded, event listeners existentes) ...
+
+function checkCanStartGame() {
+    if (selectedCategory && selectedDifficulty) {
+        startGameBtn.disabled = false;
+        startGameBtn.style.backgroundColor = '#3498db'; // Reestablece el color
+    } else {
+        startGameBtn.disabled = true;
+        startGameBtn.style.backgroundColor = '#cccccc'; // Color deshabilitado
+    }
+}
+
+// ... (resto de event listeners existentes) ...
+
+
+// --- Funciones del juego ---
+
+function startQuiz() {
+    // 1. Filtrar preguntas por categoría y dificultad
+    currentQuestions = questions.filter(q =>
+        q.categoria === selectedCategory && q.dificultad === selectedDifficulty
+    );
+
+    // 2. Mezclar las preguntas (Fisher-Yates shuffle)
+    for (let i = currentQuestions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [currentQuestions[i], currentQuestions[j]] = [currentQuestions[j], currentQuestions[i]];
+    }
+
+    score = 0;
+    currentQuestionIndex = 0;
+    scoreDisplay.textContent = score;
+    showScreen(gameScreen);
+    displayQuestion();
+}
+
+function displayQuestion() {
+    if (currentQuestionIndex >= currentQuestions.length) {
+        endQuiz();
+        return;
+    }
+
+    // Reiniciar temporizador para la nueva pregunta
+    resetTimer();
+    startTimer();
+
+    const question = currentQuestions[currentQuestionIndex];
+    questionCategory.textContent = `Categoría: ${question.categoria} - Dificultad: ${question.dificultad}`;
+    questionText.textContent = question.pregunta;
+
+    // Mezclar las opciones para cada pregunta
+    const shuffledOptions = [...question.opciones].sort(() => Math.random() - 0.5);
+
+    optionsContainer.innerHTML = ''; // Limpiar opciones anteriores
+    shuffledOptions.forEach(option => {
+        const button = document.createElement('button');
+        button.classList.add('option-btn');
+        button.textContent = option;
+        button.addEventListener('click', () => checkAnswer(option, question.respuestaCorrecta, question.explicacion));
+        optionsContainer.appendChild(button);
+    });
+
+    // Restaurar estilos de botones y habilitarlos
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.classList.remove('correct', 'incorrect', 'disabled-after-answer');
+        btn.style.backgroundColor = ''; // Restaura el color original del CSS
+        btn.disabled = false;
+    });
+}
+
+function startTimer() {
+    timeRemaining = MAX_TIME;
+    timerBar.style.width = '100%';
+    timerBar.style.backgroundColor = '#f39c12'; // Color inicial
+
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        // Actualizar la barra de progreso
+        const percentage = (timeRemaining / MAX_TIME) * 100;
+        timerBar.style.width = `${percentage}%`;
+
+        // Cambiar color de la barra cuando queda poco tiempo
+        if (timeRemaining <= 10) {
+            timerBar.style.backgroundColor = '#e74c3c'; // Rojo
+        } else {
+            timerBar.style.backgroundColor = '#f39c12'; // Naranja/Amarillo
+        }
+
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            handleTimeUp();
+        }
+    }, 1000); // Actualiza cada segundo
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timeRemaining = MAX_TIME;
+    timerBar.style.width = '100%';
+    timerBar.style.backgroundColor = '#f39c12';
+}
+
+function handleTimeUp() {
+    // Cuando el tiempo se agota, considera la respuesta como incorrecta
+    // y muestra la explicación de la pregunta actual
+    const question = currentQuestions[currentQuestionIndex];
+    
+    // Deshabilitar todos los botones para evitar más clics
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.classList.add('disabled-after-answer'); // Añadir clase para estilo deshabilitado
+        if (btn.textContent === question.respuestaCorrecta) {
+             btn.style.backgroundColor = '#2ecc71'; // Muestra la correcta en verde
+        }
+    });
+
+    resultText.textContent = '¡Tiempo agotado!';
+    resultText.style.color = '#e74c3c'; // Rojo
+    explanationText.textContent = question.explicacion;
+    explanationModal.classList.add('active'); // Mostrar el modal
+}
+
+
+function checkAnswer(selectedOption, correctAnswer, explanation) {
+    resetTimer(); // Detener el temporizador inmediatamente al responder
+
+    const allOptionButtons = document.querySelectorAll('.option-btn');
+    allOptionButtons.forEach(btn => {
+        btn.disabled = true; // Deshabilitar botones para evitar múltiples clics
+        btn.classList.add('disabled-after-answer'); // Añadir clase para estilo deshabilitado
+
+        if (btn.textContent === correctAnswer) {
+            btn.classList.add('correct'); // Clase para verde
+        } else if (btn.textContent === selectedOption) {
+            btn.classList.add('incorrect'); // Clase para rojo
+        }
+    });
+
+    if (selectedOption === correctAnswer) {
+        score++;
+        scoreDisplay.textContent = score;
+        resultText.textContent = '¡Correcto!';
+        resultText.style.color = '#2ecc71';
+    } else {
+        resultText.textContent = 'Incorrecto.';
+        resultText.style.color = '#e74c3c';
+    }
+    explanationText.textContent = explanation;
+    explanationModal.classList.add('active'); // Mostrar el modal de explicación
+}
+
+
+function endQuiz() {
+    resetTimer(); // Asegurarse de que el temporizador esté detenido
+    finalScoreDisplay.textContent = score;
+    saveScoreBtn.disabled = false;
+    showScreen(resultsScreen);
+}
+
+// ... (funciones getHighScores, saveHighScore, displayHighScores existentes) ...
