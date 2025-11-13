@@ -1,0 +1,16 @@
+[
+    {
+        "question": "¿Quién construyó el arca para salvarse del diluvio?",
+        "options": ["Noé", "Abraham", "Moisés", "David"],
+        "answer": "Noé",
+        "learnMore": "Noé fue elegido por Dios por ser justo en su generación. Construyó un arca siguiendo las instrucciones divinas y salvó a su familia y a los animales del gran diluvio que cubrió la tierra.",
+        "verse": "Génesis 6:13-14"
+    },
+    {
+        "question": "¿Cuántos días y noches llovió durante el diluvio?",
+        "options": ["7 días y 7 noches", "20 días y 20 noches", "40 días y 40 noches", "150 días y 150 noches"],
+        "answer": "40 días y 40 noches",
+        "learnMore": "El diluvio duró cuarenta días y cuarenta noches, cubriendo toda la tierra y destruyendo toda vida fuera del arca.",
+        "verse": "Génesis 7:12"
+    }
+]

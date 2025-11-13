@@ -1,0 +1,16 @@
+[
+    {
+        "question": "¿Quién fue el rey que sucedió a Saúl en Israel?",
+        "options": ["Salomón", "David", "Jeroboam", "Roboam"],
+        "answer": "David",
+        "learnMore": "David, el pastor de ovejas de Belén, fue ungido por Samuel para ser el segundo rey de Israel, sucediendo a Saúl.",
+        "verse": "1 Samuel 16:1-13"
+    },
+    {
+        "question": "¿Cuál de los siguientes profetas fue tragado por un gran pez?",
+        "options": ["Isaías", "Jeremías", "Ezequiel", "Jonás"],
+        "answer": "Jonás",
+        "learnMore": "Jonás intentó huir de la misión que Dios le había encomendado, y como castigo, fue arrojado al mar y un gran pez lo tragó, permaneciendo en su vientre tres días y tres noches.",
+        "verse": "Jonás 1:17"
+    }
+]
