@@ -15,27 +15,27 @@
         <section class="category-selection">
             <h3><i class="fas fa-book"></i> Categoría</h3>
             <div class="grid-options category-grid">
-                <button class="option-card">
+                <button class="option-card" data-category="Historia">
                     <i class="fas fa-scroll"></i>
                     <span>Historia</span>
                     <small>Eventos y personajes bíblicos</small>
                 </button>
-                <button class="option-card">
+                <button class="option-card" data-category="Teologia">
                     <i class="fas fa-cross"></i>
                     <span>Teología</span>
                     <small>Doctrina y enseñanzas</small>
                 </button>
-                <button class="option-card">
+                <button class="option-card" data-category="Apologetica">
                     <i class="fas fa-gavel"></i>
                     <span>Apologética</span>
                     <small>Defensa de la fe</small>
                 </button>
-                <button class="option-card">
+                <button class="option-card" data-category="Geografia">
                     <i class="fas fa-map-marked-alt"></i>
                     <span>Geografía</span>
                     <small>Lugares bíblicos</small>
                 </button>
-                <button class="option-card">
+                <button class="option-card" data-category="Versiculos">
                     <i class="fas fa-book-reader"></i>
                     <span>Versículos</span>
                     <small>Pasajes de las Escrituras</small>
@@ -46,23 +46,24 @@
         <section class="difficulty-selection">
             <h3><i class="fas fa-signal"></i> Dificultad</h3>
             <div class="grid-options difficulty-grid">
-                <button class="option-card difficulty-card easy">
+                <button class="option-card difficulty-card easy" data-difficulty="Facil">
                     <span class="difficulty-dot"></span>
                     <span>Fácil</span>
                 </button>
-                <button class="option-card difficulty-card medium">
+                <button class="option-card difficulty-card medium" data-difficulty="Medio">
                     <span class="difficulty-dot"></span>
                     <span>Medio</span>
                 </button>
-                <button class="option-card difficulty-card hard">
+                <button class="option-card difficulty-card hard" data-difficulty="Dificil">
                     <span class="difficulty-dot"></span>
                     <span>Difícil</span>
                 </button>
             </div>
         </section>
 
-        <button class="start-challenge-btn">Comenzar el desafío</button>
+        <button class="start-challenge-btn" id="start-challenge-btn">Comenzar el desafío</button>
     </div>
-<script src="script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
