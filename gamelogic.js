@@ -416,5 +416,44 @@ function endQuiz() {
     saveScoreBtn.disabled = false;
     showScreen(resultsScreen);
 }
+const timerCountdownDisplay = document.getElementById('timer-countdown'); // Nuevo elemento
 
+// ... (Tus variables existentes) ...
+
+function startTimer() {
+    timeRemaining = MAX_TIME;
+    timerBar.style.width = '100%';
+    timerBar.style.backgroundColor = '#f1c40f'; // Color inicial del degradado
+    timerCountdownDisplay.textContent = `${timeRemaining}s`; // Actualizar texto inicial
+
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        // Actualizar la barra de progreso
+        const percentage = (timeRemaining / MAX_TIME) * 100;
+        timerBar.style.width = `${percentage}%`;
+        timerCountdownDisplay.textContent = `${timeRemaining}s`; // Actualizar texto
+
+        // Cambiar color de la barra cuando queda poco tiempo
+        if (timeRemaining <= 10) {
+            timerBar.style.backgroundColor = '#e74c3c'; // Rojo
+        } else {
+            timerBar.style.backgroundColor = '#f1c40f'; // Naranja/Amarillo
+        }
+
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            handleTimeUp();
+        }
+    }, 1000); // Actualiza cada segundo
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timeRemaining = MAX_TIME;
+    timerBar.style.width = '100%';
+    timerBar.style.backgroundColor = '#f1c40f';
+    timerCountdownDisplay.textContent = `${timeRemaining}s`; // Reiniciar texto
+}
+
+// ... (Resto de tu JS) ...
 // ... (funciones getHighScores, saveHighScore, displayHighScores existentes) ...
