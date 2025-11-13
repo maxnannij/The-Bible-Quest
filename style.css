@@ -222,3 +222,37 @@ p {
         padding: 12px 20px;
     }
 }
+/* Estilo para las tarjetas seleccionadas (categoría y dificultad) */
+.option-card.selected {
+    background: linear-gradient(to right, #FFC107, var(--primary-orange));
+    color: white;
+    border-color: var(--primary-orange);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 167, 38, 0.2);
+}
+
+.option-card.selected i,
+.option-card.selected small {
+    color: white; /* Asegura que el icono y el texto pequeño también sean blancos */
+}
+
+/* Estilos específicos para el punto de dificultad seleccionado */
+.difficulty-card.easy.selected .difficulty-dot {
+    background-color: white; /* Punto blanco sobre fondo verde/naranja */
+    border-color: white;
+}
+.difficulty-card.medium.selected .difficulty-dot {
+    background-color: white;
+    border-color: white;
+}
+.difficulty-card.hard.selected .difficulty-dot {
+    background-color: white;
+    border-color: white;
+}
+
+/* Asegurar que el botón de iniciar desafío tenga un estado disabled */
+.start-challenge-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
