@@ -11,9 +11,9 @@ import './questions/apologetica/dificil.js';
 import './questions/geografia/facil.js';
 import './questions/geografia/medio.js';
 import './questions/geografia/dificil.js';
-import './questions/citas/facil.js';
-import './questions/citas/medio.js';
-import './questions/citas/dificil.js';
+import './questions/versiculos/facil.js';
+import './questions/versiculos/medio.js';
+import './questions/versiculos/dificil.js';
 
 // Ahora que todas las preguntas están cargadas en variables globales,
 // podemos ejecutar el script principal del juego.
