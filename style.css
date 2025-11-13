@@ -83,10 +83,16 @@ h3 {
     color: #28a745; /* Verde para el puntaje, como en la imagen */
 }
 
-.timer-display {
+/* Se eliminó la clase .timer-display, se usará el span directamente si se quiere un estilo diferente */
+/* o se puede aplicar al p.game-info y #timer-countdown si quieres mantener el rojo */
+p.game-info {
+    color: #333; /* Color por defecto, el span sobrescribe si tiene su propio estilo */
+}
+#timer-countdown {
     color: #dc3545; /* Rojo para el temporizador, como en la imagen */
     margin-bottom: 25px; /* Espacio extra debajo del tiempo */
 }
+
 
 /* --- Etiqueta de Categoría (debajo de la pregunta) --- */
 .category-tag {
@@ -209,14 +215,16 @@ button.selected {
     height: 100%;
     /* Degradado naranja/amarillo para la barra de tiempo */
     background: linear-gradient(90deg, #f1c40f, #e67e22);
-    transition: width linear; /* La transición debe ser lineal para el efecto de vaciado */
+    transition: width linear, background-color 0.5s ease; /* Añade transición para el color */
     border-radius: 6px;
 }
 
-/* Estilo para cuando la barra de tiempo cambia a rojo por JS */
-#timer-bar[style*="background-color: rgb(231, 76, 60)"] { /* Este selector intenta coincidir con el color establecido por JS */
-    background: linear-gradient(90deg, #e74c3c, #c0392b); /* Degradado rojo fuerte */
-}
+/* No es necesario un selector tan complejo si JS cambia directamente el background-color */
+/* Si JS añadiera una clase, sería más sencillo: */
+/* #timer-bar.time-critical {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+} */
+
 
 /* --- Modal de Explicación --- */
 .modal {
